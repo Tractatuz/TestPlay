@@ -1,0 +1,30 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "0.1.0",
+	"FriendlyName": "TestPlay",
+	"Description": "Runs JSON-defined PIE playtests with Enhanced Input injection and gameplay/UI assertions.",
+	"Category": "Testing",
+	"CreatedBy": "OpenCode",
+	"CanContainContent": false,
+	"IsBetaVersion": true,
+	"Installed": false,
+	"Plugins": [
+		{
+			"Name": "EnhancedInput",
+			"Enabled": true
+		}
+	],
+	"Modules": [
+		{
+			"Name": "TestPlay",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "TestPlayEditor",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
+		}
+	]
+}
