@@ -11,6 +11,10 @@
 	"Installed": false,
 	"Plugins": [
 		{
+			"Name": "TaskEvidence",
+			"Enabled": true
+		},
+		{
 			"Name": "EnhancedInput",
 			"Enabled": true
 		}

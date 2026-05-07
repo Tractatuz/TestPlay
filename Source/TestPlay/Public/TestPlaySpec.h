@@ -32,4 +32,5 @@ struct TESTPLAY_API FTestPlayResult
 
 	void AddLog(const FString& Message);
 	bool WriteToFile(const FString& FilePath, FString& OutError) const;
+	bool WriteEvidenceToDefaultLocation(const FString& ResultFilePath, FString& OutEvidencePath, FString& OutError) const;
 };

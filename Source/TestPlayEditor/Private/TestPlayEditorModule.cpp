@@ -222,13 +222,26 @@ private:
 	{
 		const FTestPlayResult Result = Runner->GetResult();
 		FString Error;
+		bool bWroteResult = false;
 		if (!Result.WriteToFile(ResultPath, Error))
 		{
 			UE_LOG(LogTestPlayEditor, Error, TEXT("Could not write TestPlay result: %s"), *Error);
 		}
 		else
 		{
+			bWroteResult = true;
 			UE_LOG(LogTestPlayEditor, Display, TEXT("Wrote TestPlay result: %s"), *ResultPath);
+		}
+
+		FString EvidencePath;
+		FString EvidenceError;
+		if (bWroteResult && Result.WriteEvidenceToDefaultLocation(ResultPath, EvidencePath, EvidenceError))
+		{
+			UE_LOG(LogTestPlayEditor, Display, TEXT("Wrote TestPlay evidence: %s"), *EvidencePath);
+		}
+		else if (!EvidenceError.IsEmpty())
+		{
+			UE_LOG(LogTestPlayEditor, Warning, TEXT("Could not write TestPlay evidence: %s"), *EvidenceError);
 		}
 
 		Runner.Reset();
@@ -283,7 +296,13 @@ private:
 		LoadFailure.AddLog(Error);
 
 		FString WriteError;
-		LoadFailure.WriteToFile(ResolveResultPath(SpecPath, LoadFailure.SuiteName), WriteError);
+		const FString LoadFailureResultPath = ResolveResultPath(SpecPath, LoadFailure.SuiteName);
+		if (LoadFailure.WriteToFile(LoadFailureResultPath, WriteError))
+		{
+			FString EvidencePath;
+			FString EvidenceError;
+			LoadFailure.WriteEvidenceToDefaultLocation(LoadFailureResultPath, EvidencePath, EvidenceError);
+		}
 	}
 
 	FTestPlaySpec PendingSpec;

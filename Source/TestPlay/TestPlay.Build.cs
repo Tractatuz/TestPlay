@@ -17,6 +17,7 @@ public class TestPlay : ModuleRules
 			"JsonUtilities",
 			"Slate",
 			"SlateCore",
+			"TaskEvidence",
 			"UMG"
 		});
 	}

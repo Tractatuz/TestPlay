@@ -6,6 +6,7 @@
 #include "Serialization/JsonReader.h"
 #include "Serialization/JsonSerializer.h"
 #include "Serialization/JsonWriter.h"
+#include "TaskEvidenceBuilder.h"
 
 namespace TestPlaySpec
 {
@@ -137,4 +138,24 @@ bool FTestPlayResult::WriteToFile(const FString& FilePath, FString& OutError) co
 	}
 
 	return true;
+}
+
+bool FTestPlayResult::WriteEvidenceToDefaultLocation(const FString& ResultFilePath, FString& OutEvidencePath, FString& OutError) const
+{
+	FTaskEvidenceBuilder Evidence(TEXT("TestPlay"), TEXT("RunSpec"));
+	Evidence
+		.SetStatus(bSuccess ? TEXT("passed") : TEXT("failed"))
+		.SetSummary(bSuccess ? TEXT("TestPlay spec completed successfully.") : TEXT("TestPlay spec failed."), Error)
+		.AddFact(TEXT("testplay.suite"), SuiteName)
+		.AddFact(TEXT("testplay.success"), bSuccess)
+		.AddFact(TEXT("testplay.duration_seconds"), static_cast<double>(DurationSeconds))
+		.AddFact(TEXT("testplay.failed_step"), FailedStep)
+		.AddArtifact(ResultFilePath, TEXT("test_result"), TEXT("application/json"), TEXT("Original TestPlay result JSON."));
+
+	for (const FString& Line : LogLines)
+	{
+		Evidence.AddLog(TEXT("info"), TEXT("TestPlay"), Line);
+	}
+
+	return Evidence.WriteToDefaultLocation(OutEvidencePath, OutError);
 }
